@@ -20,4 +20,4 @@ app.get('/hello', hello);
 
 require('./services/movies-services')(app);
 require('./services/tweeter-service')(app);
-app.listen(4000);
+app.listen(process.env.PORT||4000);
