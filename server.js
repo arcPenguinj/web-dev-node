@@ -18,6 +18,7 @@ app.use(function(req, res, next) {
 const hello = (req, res) => res.send('Hello World!');
 app.get('/hello', hello);
 
+require('./services/profile-service')(app);
 require('./services/movies-services')(app);
 require('./services/tweeter-service')(app);
 app.listen(process.env.PORT||4000);

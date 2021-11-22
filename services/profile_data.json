@@ -1,0 +1,14 @@
+{
+  "firstName": "Jessica",
+  "lastName": "Zhu",
+  "handle": "JessicaZ",
+  "profilePicture": "/images/jess.jpg",
+  "bannerPicture": "/images/banner.jpg",
+  "bio": "Student, Master of Computer Science. Retweets and likes are not endorsements.",
+  "website": "https://github.com/arcPenguinj",
+  "location": "Seattle, WA",
+  "dateOfBirth": "01/01/1900",
+  "dateJoined": "09/2020",
+  "followingCount": 312,
+  "followersCount": 180
+}
