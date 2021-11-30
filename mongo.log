@@ -1,0 +1,159 @@
+PS C:> mongo
+MongoDB shell version v5.0.4
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("112c4aaf-47c1-411e-833e-63dcbf66b2ad") }
+MongoDB server version: 5.0.4
+================
+Warning: the "mongo" shell has been superseded by "mongosh",
+which delivers improved usability and compatibility.The "mongo" shell has been deprecated and will be removed in
+an upcoming release.
+For installation instructions, see
+https://docs.mongodb.com/mongodb-shell/install/
+================
+---
+The server generated these startup warnings when booting:
+        2021-11-29T18:31:55.959-08:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use webdev
+switched to db webdev
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+>  db.movies.insert({title: 'Aliens', rating: 4.5})
+WriteResult({ "nInserted" : 1 })
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+webdev  0.000GB
+> db.movies.insert({title: 'Terminator', rating: 4.8})
+WriteResult({ "nInserted" : 1 })
+> db.movies.insert({title: 'Avatar', rating: 4.7})
+WriteResult({ "nInserted" : 1 })
+> db.movies.insert({title: 'Dune', rating: 4.9})
+WriteResult({ "nInserted" : 1 })
+> db.movies.find()
+{ "_id" : ObjectId("61a591b2c67de98f73d3993f"), "title" : "Aliens", "rating" : 4.5 }
+{ "_id" : ObjectId("61a59207c67de98f73d39940"), "title" : "Terminator", "rating" : 4.8 }
+{ "_id" : ObjectId("61a59215c67de98f73d39941"), "title" : "Avatar", "rating" : 4.7 }
+{ "_id" : ObjectId("61a59221c67de98f73d39942"), "title" : "Dune", "rating" : 4.9 }
+> db.movies.find({_id: ObjectId("618708ce2f9dcdbdb306a5d7")})
+> db.movies.find({_id: ObjectId("61a591b2c67de98f73d3993f")})
+{ "_id" : ObjectId("61a591b2c67de98f73d3993f"), "title" : "Aliens", "rating" : 4.5 }
+> db.movies.find({title: 'Aliens'});
+{ "_id" : ObjectId("61a591b2c67de98f73d3993f"), "title" : "Aliens", "rating" : 4.5 }
+>  db.movies.find().pretty()
+{
+        "_id" : ObjectId("61a591b2c67de98f73d3993f"),
+        "title" : "Aliens",
+        "rating" : 4.5
+}
+{
+        "_id" : ObjectId("61a59207c67de98f73d39940"),
+        "title" : "Terminator",
+        "rating" : 4.8
+}
+{
+        "_id" : ObjectId("61a59215c67de98f73d39941"),
+        "title" : "Avatar",
+        "rating" : 4.7
+}
+{
+        "_id" : ObjectId("61a59221c67de98f73d39942"),
+        "title" : "Dune",
+        "rating" : 4.9
+}
+> db.movies.updateOne({title: 'Avatar'}, {rating: 4.9})
+uncaught exception: Error: the update operation document must contain atomic operators :
+DBCollection.prototype.updateOne@src/mongo/shell/crud_api.js:565:19
+@(shell):1:1
+> db.movies.updateOne({title: 'Avatar'}, {rating: 4.9});
+uncaught exception: Error: the update operation document must contain atomic operators :
+DBCollection.prototype.updateOne@src/mongo/shell/crud_api.js:565:19
+@(shell):1:1
+> db.movies.updateOne({title: 'Avatar'}, { $set: {rating: 4.9}});
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.movies.find().pretty()
+{
+        "_id" : ObjectId("61a591b2c67de98f73d3993f"),
+        "title" : "Aliens",
+        "rating" : 4.5
+}
+{
+        "_id" : ObjectId("61a59207c67de98f73d39940"),
+        "title" : "Terminator",
+        "rating" : 4.8
+}
+{
+        "_id" : ObjectId("61a59215c67de98f73d39941"),
+        "title" : "Avatar",
+        "rating" : 4.9
+}
+{
+        "_id" : ObjectId("61a59221c67de98f73d39942"),
+        "title" : "Dune",
+        "rating" : 4.9
+}
+>
+> db.movies.updateOne({_id: ObjectId("61a59215c67de98f73d39941")}, {rating:4.5})
+uncaught exception: Error: the update operation document must contain atomic operators :
+DBCollection.prototype.updateOne@src/mongo/shell/crud_api.js:565:19
+@(shell):1:1
+> db.movies.updateOne({_id: ObjectId("61a59215c67de98f73d39941")}, {$set: {rating:4.5}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.movies.find().pretty()
+{
+        "_id" : ObjectId("61a591b2c67de98f73d3993f"),
+        "title" : "Aliens",
+        "rating" : 4.5
+}
+{
+        "_id" : ObjectId("61a59207c67de98f73d39940"),
+        "title" : "Terminator",
+        "rating" : 4.8
+}
+{
+        "_id" : ObjectId("61a59215c67de98f73d39941"),
+        "title" : "Avatar",
+        "rating" : 4.5
+}
+{
+        "_id" : ObjectId("61a59221c67de98f73d39942"),
+        "title" : "Dune",
+        "rating" : 4.9
+}
+> db.movies.deleteOne({_id: ObjectId("61a59215c67de98f73d39941")})
+{ "acknowledged" : true, "deletedCount" : 1 }
+> db.movies.find().pretty()
+{
+        "_id" : ObjectId("61a591b2c67de98f73d3993f"),
+        "title" : "Aliens",
+        "rating" : 4.5
+}
+{
+        "_id" : ObjectId("61a59207c67de98f73d39940"),
+        "title" : "Terminator",
+        "rating" : 4.8
+}
+{
+        "_id" : ObjectId("61a59221c67de98f73d39942"),
+        "title" : "Dune",
+        "rating" : 4.9
+}
+>
