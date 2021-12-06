@@ -1,15 +1,15 @@
-let tweets = require('./tweets.json');
-
+const dao = require('../db/tweets/tweet-dao');
 module.exports = (app) => {
 
-  const findAllTweets = (req, res) => {
-    res.json(tweets);
-  }
+  const findAllTweets = (req, res) =>
+    dao.fetchAllTweets()
+      .then(tweets => res.json(tweets));
+
   app.get('/api/tweets', findAllTweets);
 
-  const postNewTweet = (req, res) => {
+  const postNewTweet = (req, res) =>
+  {
     const newTweet = {
-      _id: (new Date()).getTime() + '',
       "userName": "ReactJS",
       "handle": "ReactJS",
       "time": "2h",
@@ -22,41 +22,32 @@ module.exports = (app) => {
         "image": "/images/starship.jpeg"
       },
       ...req.body,
-    }
-    tweets = [
-      newTweet,
-      ...tweets
-    ];
+    };
+    dao.postNewTweet(newTweet);
     res.json(newTweet);
   }
   app.post('/api/tweets', postNewTweet);
 
   const deleteTweet = (req, res) => {
     const id = req.params['id'];
-    tweets = tweets.filter(tweet => tweet._id !== id);
+    dao.deleteTweet(id);
     res.sendStatus(200);
   }
   app.delete('/api/tweets/:id', deleteTweet);
 
   const likeTweet = (req, res) => {
     const id = req.params['id'];
-    tweets = tweets.map(tweet => {
-      if (tweet._id === id) {
-        if (tweet.liked === true) {
-          tweet.liked = false;
-          tweet.like--;
-        } else {
-          tweet.liked = true;
-          tweet.like++;
-        }
-        return tweet;
+    dao.findById(id).then(tweet => {
+      if (tweet.liked === true) {
+        tweet.liked = false;
+        tweet.like--;
       } else {
-        return tweet;
+        tweet.liked = true;
+        tweet.like++;
       }
+      dao.updateTweet(id, tweet).then(_ => res.sendStatus(200));
     });
-    res.sendStatus(200);
+
   }
   app.put('/api/tweets/:id/like', likeTweet);
-
-
 };
